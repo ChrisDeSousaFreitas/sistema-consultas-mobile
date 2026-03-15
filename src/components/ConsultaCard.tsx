@@ -1,12 +1,16 @@
+/**
+ * =============================================================================
+ * COMPONENTE: ConsultaCard
+ * =============================================================================
+ */
 import React from "react";
 import { View, Text, StyleSheet, Button } from "react-native";
-import { Consulta } from "../interfaces/consulta"; // Type Global
+import { Consulta } from "../interfaces/consulta";
 
-// Type Local (Props do componente)
 type ConsultaCardProps = {
   consulta: Consulta;
-  onConfirmar: () => void;
-  onCancelar: () => void;
+  onConfirmar?: () => void;
+  onCancelar?: () => void;
 };
 
 export default function ConsultaCard({
@@ -15,7 +19,6 @@ export default function ConsultaCard({
   onCancelar,
 }: ConsultaCardProps) {
   
-  // Funções Auxiliares Locais
   function formatarValor(valor: number): string {
     return valor.toLocaleString("pt-BR", {
       style: "currency",
@@ -29,12 +32,16 @@ export default function ConsultaCard({
 
   return (
     <View style={styles.card}>
-      <View style={[
-        styles.statusBadge,
-        consulta.status === "confirmada" && styles.statusConfirmada,
-        consulta.status === "cancelada" && styles.statusCancelada,
-      ]}>
-        <Text style={styles.statusTexto}>{consulta.status.toUpperCase()}</Text>
+      <View
+        style={[
+          styles.statusBadge,
+          consulta.status === "confirmada" && styles.statusConfirmada,
+          consulta.status === "cancelada" && styles.statusCancelada,
+        ]}
+      >
+        <Text style={styles.statusTexto}>
+          {consulta.status.toUpperCase()}
+        </Text>
       </View>
 
       <View style={styles.secao}>
@@ -57,7 +64,9 @@ export default function ConsultaCard({
       <View style={styles.secao}>
         <Text style={styles.label}>📅 Dados da Consulta</Text>
         <Text style={styles.valor}>Data: {formatarData(consulta.data)}</Text>
-        <Text style={styles.valor}>Valor: {formatarValor(consulta.valor)}</Text>
+        <Text style={styles.valor}>
+          Valor: {formatarValor(consulta.valor)}
+        </Text>
         {consulta.observacoes && (
           <Text style={styles.observacoes}>{consulta.observacoes}</Text>
         )}
@@ -66,19 +75,35 @@ export default function ConsultaCard({
       <View style={styles.acoes}>
         {consulta.status === "agendada" && (
           <>
-            <View style={styles.botaoContainer}>
-              <Button title="Confirmar Consulta" onPress={onConfirmar} color="#4CAF50" />
-            </View>
-            <View style={styles.botaoContainer}>
-              <Button title="Cancelar Consulta" onPress={onCancelar} color="#F44336" />
-            </View>
+            {onConfirmar && (
+              <View style={styles.botaoContainer}>
+                <Button
+                  title="Confirmar Consulta"
+                  onPress={onConfirmar}
+                  color="#4CAF50"
+                />
+              </View>
+            )}
+            {onCancelar && (
+              <View style={styles.botaoContainer}>
+                <Button
+                  title="Cancelar Consulta"
+                  onPress={onCancelar}
+                  color="#F44336"
+                />
+              </View>
+            )}
           </>
         )}
+
         {consulta.status === "confirmada" && (
           <View style={styles.mensagem}>
-            <Text style={styles.mensagemTexto}>✓ Consulta confirmada com sucesso!</Text>
+            <Text style={styles.mensagemTexto}>
+              ✓ Consulta confirmada com sucesso!
+            </Text>
           </View>
         )}
+
         {consulta.status === "cancelada" && (
           <View style={styles.mensagemCancelada}>
             <Text style={styles.mensagemTexto}>✗ Consulta cancelada</Text>
@@ -89,7 +114,6 @@ export default function ConsultaCard({
   );
 }
 
-// Estilos Locais (Apenas o que pertence ao card)
 const styles = StyleSheet.create({
   card: { backgroundColor: "#fff", borderRadius: 16, padding: 20, shadowColor: "#000", shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.2, shadowRadius: 8, elevation: 5 },
   statusBadge: { backgroundColor: "#FFA500", alignSelf: "flex-start", paddingHorizontal: 16, paddingVertical: 8, borderRadius: 20, marginBottom: 20 },

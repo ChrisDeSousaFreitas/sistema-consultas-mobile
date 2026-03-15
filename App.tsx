@@ -2,14 +2,13 @@ import React, { useState } from "react";
 import { View, Text, StyleSheet, ScrollView } from "react-native";
 import { StatusBar } from "expo-status-bar";
 
-// Importando o NOVO componente
-import ConsultaCard from "./src/components/ConsultaCard";
-
-// Importando os tipos globais
 import { Especialidade } from "./src/types/especialidade";
 import { Paciente } from "./src/types/paciente";
 import { Medico } from "./src/interfaces/medico";
 import { Consulta } from "./src/interfaces/consulta";
+
+// Importação mais limpa usando o arquivo index.ts!
+import { ConsultaCard } from "./src/components";
 
 export default function App() {
   const cardiologia: Especialidade = { id: 1, nome: "Cardiologia", descricao: "Cuidados com o coração" };
@@ -27,24 +26,29 @@ export default function App() {
   });
 
   function confirmarConsulta() {
-    setConsulta({ ...consulta, status: "confirmada" });
+    setConsulta({
+      ...consulta,
+      status: "confirmada",
+    });
   }
 
   function cancelarConsulta() {
-    setConsulta({ ...consulta, status: "cancelada" });
+    setConsulta({
+      ...consulta,
+      status: "cancelada",
+    });
   }
 
   return (
     <View style={styles.container}>
       <StatusBar style="light" />
-      
+
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <View style={styles.header}>
           <Text style={styles.titulo}>Sistema de Consultas</Text>
           <Text style={styles.subtitulo}>Consulta #{consulta.id}</Text>
         </View>
 
-        {/* COMPONENTIZAÇÃO NA PRÁTICA! Tudo se resume a isso: */}
         <ConsultaCard
           consulta={consulta}
           onConfirmar={confirmarConsulta}
@@ -56,11 +60,12 @@ export default function App() {
   );
 }
 
-// O App.tsx agora só tem os estilos gerais do fundo da tela
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: "#79059C" },
-  scrollContent: { padding: 20, paddingTop: 40 },
+  scrollContent: { padding: 20, paddingTop: 60 },
   header: { alignItems: "center", marginBottom: 24 },
   titulo: { fontSize: 28, fontWeight: "bold", color: "#fff", marginBottom: 8 },
   subtitulo: { fontSize: 18, color: "#fff", opacity: 0.9 },
+  rodape: { marginTop: 24, padding: 16, backgroundColor: "rgba(255, 255, 255, 0.1)", borderRadius: 12 },
+  rodapeTexto: { fontSize: 12, color: "#fff", textAlign: "center", lineHeight: 18, marginBottom: 4 },
 });
