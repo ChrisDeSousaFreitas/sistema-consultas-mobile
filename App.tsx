@@ -1,21 +1,33 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { Home, Admin } from "./src/screens";
+import Home from "./src/screens/Home";
+import Admin from "./src/screens/Admin";
+import CadastroPaciente from "./src/screens/CadastroPaciente";
+import Agendamento from "./src/screens/Agendamento";
+import { inicializarDados } from "./src/services/storage";
 
 const Stack = createNativeStackNavigator();
 
 export default function App() {
+  // Roda uma única vez quando o App "nasce"
+  useEffect(() => {
+    inicializarDados();
+  }, []);
+
   return (
     <NavigationContainer>
       <Stack.Navigator
+        initialRouteName="Login" // Define a tela de entrada
         screenOptions={{
           headerStyle: { backgroundColor: "#79059C" },
           headerTintColor: "#fff",
           headerTitleStyle: { fontWeight: "bold" },
         }}
       >
-        <Stack.Screen name="Home" component={Home} options={{ title: "Clínica App" }} />
+        <Stack.Screen name="Login" component={CadastroPaciente} options={{ headerShown: false }} />
+        <Stack.Screen name="Home" component={Home} options={{ title: "Minhas Consultas" }} />
+        <Stack.Screen name="Agendamento" component={Agendamento} options={{ title: "Agendar Consulta" }} />
         <Stack.Screen name="Admin" component={Admin} options={{ title: "Painel Administrativo" }} />
       </Stack.Navigator>
     </NavigationContainer>
