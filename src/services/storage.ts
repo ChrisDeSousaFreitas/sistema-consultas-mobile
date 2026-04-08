@@ -13,10 +13,68 @@ const KEYS = {
   PACIENTES: "@consultas:pacientes",
 };
 
-// ... (MANTENHA AQUI SUAS FUNÇÕES ANTIGAS DE obter/salvar Especialidades, Medicos e Consultas) ...
+// =================== ESPECIALIDADES ===================
+export async function salvarEspecialidades(especialidades: Especialidade[]) {
+  try {
+    await AsyncStorage.setItem(KEYS.ESPECIALIDADES, JSON.stringify(especialidades));
+  } catch (erro) {
+    console.error("Erro ao salvar especialidades:", erro);
+  }
+}
+
+export async function obterEspecialidades(): Promise<Especialidade[]> {
+  try {
+    const dados = await AsyncStorage.getItem(KEYS.ESPECIALIDADES);
+    return dados ? JSON.parse(dados) : []; 
+  } catch (erro) {
+    return [];
+  }
+}
+
+// =================== MÉDICOS ===================
+export async function salvarMedicos(medicos: Medico[]) {
+  try {
+    await AsyncStorage.setItem(KEYS.MEDICOS, JSON.stringify(medicos));
+  } catch (erro) {
+    console.error("Erro ao salvar médicos:", erro);
+  }
+}
+
+export async function obterMedicos(): Promise<Medico[]> {
+  try {
+    const dados = await AsyncStorage.getItem(KEYS.MEDICOS);
+    return dados ? JSON.parse(dados) : [];
+  } catch (erro) {
+    return [];
+  }
+}
+
+// =================== CONSULTAS ===================
+export async function salvarConsultas(consultas: Consulta[]) {
+  try {
+    await AsyncStorage.setItem(KEYS.CONSULTAS, JSON.stringify(consultas));
+  } catch (erro) {
+    console.error("Erro ao salvar consultas:", erro);
+  }
+}
+
+export async function obterConsultas(): Promise<Consulta[]> {
+  try {
+    const dados = await AsyncStorage.getItem(KEYS.CONSULTAS);
+    if (dados) {
+      const consultas = JSON.parse(dados);
+      return consultas.map((c: any) => ({
+        ...c,
+        data: new Date(c.data),
+      }));
+    }
+    return [];
+  } catch (erro) {
+    return [];
+  }
+}
 
 // ========== PACIENTES E AUTENTICAÇÃO ==========
-
 export async function salvarPacientes(pacientes: Paciente[]) {
   try { await AsyncStorage.setItem(KEYS.PACIENTES, JSON.stringify(pacientes)); } 
   catch (erro) { console.error("Erro ao salvar pacientes:", erro); }

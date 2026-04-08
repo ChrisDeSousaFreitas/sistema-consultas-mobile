@@ -48,9 +48,13 @@ export default function Agendamento({ navigation }: any) {
       const consultas = await obterConsultas();
       await salvarConsultas([...consultas, novaConsulta]);
       
-      Alert.alert("Sucesso!", `Consulta agendada!`, [{ text: "OK", onPress: () => navigation.navigate("Home") }]);
+      Alert.alert("Sucesso!", `Consulta agendada com ${medSelecionado.nome} para ${dataConsulta}`, [
+        { text: "Ver minhas consultas", onPress: () => navigation.navigate("Home") }
+      ]);
+      
+      setEspSelecionada(null); setMedSelecionado(null); setDataConsulta(""); setMedicosFiltrados([]);
     } catch (erro) {
-      Alert.alert("Erro", "Falha ao agendar");
+      Alert.alert("Erro", "Falha ao agendar a consulta");
     }
   }
 

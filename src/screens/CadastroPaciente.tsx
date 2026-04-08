@@ -42,7 +42,7 @@ export default function CadastroPaciente({ navigation }: any) {
         await salvarPacienteLogado(pacienteExistente);
         navigation.replace("Home");
       } else {
-        setErro("CPF não encontrado. Faça seu cadastro.");
+        setErro("CPF não encontrado no cadastro. Verifique se digitou corretamente.");
       }
     } catch (erro) {
       Alert.alert("Erro", "Falha ao verificar CPF");
@@ -69,14 +69,18 @@ export default function CadastroPaciente({ navigation }: any) {
       <StatusBar style="light" />
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <View style={styles.header}>
+          <Text style={styles.icone}>🏥</Text>
           <Text style={styles.titulo}>Bem-vindo!</Text>
-          <Text style={styles.subtitulo}>{etapa === "cpf" ? "Informe seu CPF para entrar" : "Complete seu cadastro"}</Text>
+          <Text style={styles.subtitulo}>{etapa === "cpf" ? "Informe seu CPF para continuar" : "Complete seu cadastro"}</Text>
         </View>
 
         <View style={styles.form}>
           {etapa === "cpf" && (
             <>
-              <TextInput style={styles.input} placeholder="CPF (somente números)" value={cpf} onChangeText={(t) => { setCpf(t); setErro(""); }} keyboardType="numeric" maxLength={14} editable={!verificando} />
+              <View style={styles.inputContainer}>
+                <Text style={styles.label}>CPF *</Text>
+                <TextInput style={styles.input} placeholder="000.000.000-00" value={cpf} onChangeText={(t) => { setCpf(t); setErro(""); }} keyboardType="numeric" maxLength={14} editable={!verificando} />
+              </View>
               <TouchableOpacity style={[styles.botao, verificando && styles.botaoDesabilitado]} onPress={verificarCPF} disabled={verificando}>
                 <Text style={styles.botaoTexto}>{verificando ? "Verificando..." : "Continuar"}</Text>
               </TouchableOpacity>
@@ -84,7 +88,9 @@ export default function CadastroPaciente({ navigation }: any) {
               {erro ? (
                 <View style={styles.erroContainer}>
                   <Text style={styles.erroTexto}>{erro}</Text>
-                  <TouchableOpacity onPress={() => setEtapa("cadastro")}><Text style={styles.linkTexto}>Fazer cadastro agora</Text></TouchableOpacity>
+                  <TouchableOpacity onPress={() => setEtapa("cadastro")} style={styles.botaoCadastro}>
+                    <Text style={styles.botaoCadastroTexto}>Fazer cadastro agora</Text>
+                  </TouchableOpacity>
                 </View>
               ) : null}
             </>
@@ -92,15 +98,24 @@ export default function CadastroPaciente({ navigation }: any) {
 
           {etapa === "cadastro" && (
             <>
-              <TextInput style={[styles.input, styles.inputDesabilitado]} value={cpf} editable={false} />
-              <TextInput style={styles.input} placeholder="Nome Completo" value={nome} onChangeText={setNome} editable={!verificando} />
-              <TextInput style={styles.input} placeholder="Email" value={email} onChangeText={setEmail} keyboardType="email-address" autoCapitalize="none" editable={!verificando} />
-              <TextInput style={styles.input} placeholder="Telefone" value={telefone} onChangeText={setTelefone} keyboardType="phone-pad" editable={!verificando} />
-              
+              <View style={styles.inputContainer}>
+                <Text style={styles.label}>CPF</Text>
+                <TextInput style={[styles.input, styles.inputDesabilitado]} value={cpf} editable={false} />
+              </View>
+              <View style={styles.inputContainer}>
+                <Text style={styles.label}>Nome Completo *</Text>
+                <TextInput style={styles.input} placeholder="Digite seu nome completo" value={nome} onChangeText={setNome} autoCapitalize="words" editable={!verificando} />
+              </View>
+              <View style={styles.inputContainer}>
+                <Text style={styles.label}>Email *</Text>
+                <TextInput style={styles.input} placeholder="seu@email.com" value={email} onChangeText={setEmail} keyboardType="email-address" autoCapitalize="none" editable={!verificando} />
+              </View>
               <TouchableOpacity style={[styles.botao, verificando && styles.botaoDesabilitado]} onPress={completarCadastro} disabled={verificando}>
                 <Text style={styles.botaoTexto}>{verificando ? "Cadastrando..." : "Finalizar Cadastro"}</Text>
               </TouchableOpacity>
-              <TouchableOpacity onPress={() => setEtapa("cpf")} style={{marginTop: 15}}><Text style={styles.linkTexto}>← Voltar</Text></TouchableOpacity>
+              <TouchableOpacity onPress={() => setEtapa("cpf")} style={styles.botaoVoltar}>
+                <Text style={styles.botaoVoltarTexto}>← Voltar</Text>
+              </TouchableOpacity>
             </>
           )}
         </View>
@@ -113,15 +128,21 @@ const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: "#79059C" },
   scrollContent: { flexGrow: 1, justifyContent: "center", padding: 20 },
   header: { alignItems: "center", marginBottom: 40 },
+  icone: { fontSize: 50, marginBottom: 10 },
   titulo: { fontSize: 32, fontWeight: "bold", color: "#fff" },
   subtitulo: { fontSize: 16, color: "#e0e0e0", marginTop: 5 },
   form: { backgroundColor: "#fff", padding: 20, borderRadius: 16, elevation: 5 },
-  input: { backgroundColor: "#f5f5f5", padding: 15, borderRadius: 8, marginBottom: 15, borderWidth: 1, borderColor: "#e0e0e0" },
+  inputContainer: { marginBottom: 15 },
+  label: { fontSize: 14, color: "#333", marginBottom: 5, fontWeight: "bold" },
+  input: { backgroundColor: "#f5f5f5", padding: 15, borderRadius: 8, borderWidth: 1, borderColor: "#e0e0e0" },
   inputDesabilitado: { backgroundColor: "#e0e0e0", color: "#666" },
   botao: { backgroundColor: "#4CAF50", padding: 15, borderRadius: 8, alignItems: "center" },
   botaoDesabilitado: { backgroundColor: "#A5D6A7" },
   botaoTexto: { color: "#fff", fontWeight: "bold", fontSize: 16 },
   erroContainer: { marginTop: 15, alignItems: "center" },
   erroTexto: { color: "#F44336", marginBottom: 10, textAlign: "center" },
-  linkTexto: { color: "#79059C", fontWeight: "bold", textAlign: "center" }
+  botaoCadastro: { padding: 10 },
+  botaoCadastroTexto: { color: "#79059C", fontWeight: "bold", textAlign: "center" },
+  botaoVoltar: { marginTop: 15, padding: 10 },
+  botaoVoltarTexto: { color: "#79059C", fontWeight: "bold", textAlign: "center" }
 });

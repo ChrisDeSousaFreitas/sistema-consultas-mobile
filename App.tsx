@@ -10,7 +10,7 @@ import { inicializarDados } from "./src/services/storage";
 const Stack = createNativeStackNavigator();
 
 export default function App() {
-  // Roda uma única vez quando o App "nasce"
+  // Inicializa o banco de dados fictício quando o app abre
   useEffect(() => {
     inicializarDados();
   }, []);
@@ -18,7 +18,7 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName="Login" // Define a tela de entrada
+        initialRouteName="Login"
         screenOptions={{
           headerStyle: { backgroundColor: "#79059C" },
           headerTintColor: "#fff",
